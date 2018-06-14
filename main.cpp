@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "wrb_som.h"
+
 #define XPIX "1000"
 #define YPIX "1000"
 
