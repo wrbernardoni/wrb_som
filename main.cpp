@@ -11,11 +11,12 @@ int main()
   ofstream out;
   out.open("im.ppm");
   out << "P3 " XPIX " " YPIX " 255" << endl;
+  srand(time(0));
   for (int x = 0; x < atoi(XPIX); x++)
   {
     for (int y = 0; y < atoi(YPIX); y++)
     {
-      out << " 100 50 255 ";
+      out << rand() % 255 << " " << rand() % 255 << " " << rand() % 255 << " ";
     }
     out << endl;
   } 
