@@ -10,6 +10,24 @@ using namespace std;
 
 int main()
 {
+  wrb_SOM som(2,1000,5);
+  int c;
+  cin >> c;
+
+  cout << "Starting -\n";
+  for(int i = 0; i < 1000000; i++)
+  { 
+    double coord[] = {0.75, 1.0};
+    double* addr = som.out(coord);
+    cout << "["  << i << "]";
+    for (int i = 0; i < 5; i++)
+    {
+      cout << " " << addr[i];
+    }
+    cout << endl;
+  }
+
+  /*
   ofstream out;
   out.open("im.ppm");
   out << "P3 " XPIX " " YPIX " 1024" << endl;
@@ -33,6 +51,7 @@ int main()
     out << endl;
   } 
   out.close();
+  */
 }
 
 
