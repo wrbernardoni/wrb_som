@@ -1,1 +1,1 @@
-g++ -Wall -Wextra -o ./build/wrb_som.exe main.cpp -std=c++11
+g++ -Wall -Wextra -o ./build/wrb_som.exe wrb_som.cpp main.cpp -std=c++11
