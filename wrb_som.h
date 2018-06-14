@@ -5,15 +5,27 @@
 
 struct wrb_SOM_node
 {
-  double map[]; 
+  double *image; 
 };
 
 class wrb_SOM
 {
 private:
-  int m_dim, o_dim, *res;
+  bool inited;
+  int m_dim, o_dim, res;
+  wrb_SOM_node *map;
+
+  int mapIndex(int*);
 public:
-  void init(int map_dim, int resolution[], int out_dim);
+  wrb_SOM();
+  wrb_SOM(int map_dim, int resolution, int out_dim);
+
+  void init(int map_dim, int resolution, int out_dim);
+
+  double* out(double*);
+
+  inline wrb_SOM_node* getMap() { return map; };
+  inline bool isInited() { return inited; };
 };
 
 #endif
