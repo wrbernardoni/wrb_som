@@ -24,6 +24,8 @@ public:
 
   double* out(double*);
 
+  //TODO Training function
+
   inline wrb_SOM_node* getMap() { return map; };
   inline bool isInited() { return inited; };
 };
