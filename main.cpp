@@ -1,33 +1,45 @@
 #include <iostream>
 #include <fstream>
+#include <random>
+#include <string>
 
 #include "wrb_som.h"
 
 #define XPIX "1000"
 #define YPIX "1000"
 
+#define RES 50
+#define TI 10000
+#define SAMPLE 50 
+
 using namespace std;
 
 int main()
 {
-  wrb_SOM som(2,1000,5);
-  int c;
-  cin >> c;
+  random_device rd;
+  mt19937 gen(rd());
+  uniform_real_distribution<> dis(0.0, 1.0);
 
-  cout << "Starting -\n";
-  for(int i = 0; i < 1000000; i++)
-  { 
-    double coord[] = {0.75, 1.0};
-    double* addr = som.out(coord);
-    cout << "["  << i << "]";
-    for (int i = 0; i < 5; i++)
-    {
-      cout << " " << addr[i];
-    }
-    cout << endl;
+  wrb_SOM som(2,RES,3);
+  //som.setOutDistanceMetric(cosSim);
+
+  vector<double*> trainingData;
+
+  for(int i = 0; i < SAMPLE; i++)
+  {
+    double* d = new double[3];
+    double l = dis(gen);
+    d[0] = l;
+    d[1] = l;
+    d[2] = l;
+    cout << d[0] << ":" << d[1] << ":" << d[2] << endl;
+    trainingData.push_back(d);
   }
 
-  /*
+  cout << endl << "Training\n";
+  som.train(trainingData, TI);
+  cout << " -- Complete\nWriting Picture.\n";
+
   ofstream out;
   out.open("im.ppm");
   out << "P3 " XPIX " " YPIX " 1024" << endl;
@@ -39,19 +51,20 @@ int main()
   {
     for (int y = 0; y < atoi(YPIX); y++)
     {
-      int r = rand() % 6;
-      int dG = (r == 0 ? 1 : 0);
-      int dR = (r == 1 ? 1 : 0);
-      int dB = (r == 2 ? 1 : 0);
-      pGreen = (pGreen + dG) % 1024;
-      pRed = (pRed + dR) % 1024;
-      pBlue = (pBlue + dB) % 1024;
+      double* coord = new double[2];
+      coord[0] = (double) x / (double) atoi(XPIX);
+      coord[1] = (double) y / (double) atoi(YPIX);
+      double* d = som.out(coord);
+      delete coord;
+
+      pGreen = d[1] * 1024;
+      pRed = d[0] * 1024;
+      pBlue = d[2] * 1024;
       out << pRed << " " << pGreen << " " << pBlue << " ";
     }
     out << endl;
   } 
   out.close();
-  */
 }
 
 
