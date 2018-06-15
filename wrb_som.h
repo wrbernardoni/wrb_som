@@ -25,6 +25,7 @@ public:
   double* out(double*);
 
   //TODO Training function
+  double train(std::vector<double*> trainingSet, int numIterations);
 
   inline wrb_SOM_node* getMap() { return map; };
   inline bool isInited() { return inited; };

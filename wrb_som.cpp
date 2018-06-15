@@ -76,3 +76,18 @@ double* wrb_SOM::out(double* coord)
   delete nearestIndex;
   return map[nI].image;
 }
+
+double train(std::vector<double*> trainingSet, int numIterations)
+{
+  for (int i = 0; i < numIterations; i++)
+  {
+    // Choose random training vector
+
+    // Find BMU
+
+    // Modify neighborhood of BMU
+  }
+
+  // Evaluate error of network
+  return 0.0;
+}
