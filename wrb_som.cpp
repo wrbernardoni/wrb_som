@@ -29,7 +29,7 @@ double monDecreasingEuler(double *a, double *b, int dim, int ts, int maxTs)
 {
   double euler = eulerianDist(a, b, dim);
   double tsProg = 1.0 - ((double)ts / (double) maxTs);
-  return tsProg * tsProg * std::exp(-euler);
+  return tsProg * tsProg * std::exp(-euler * 10.0);
 }
 
 
@@ -124,9 +124,12 @@ double* wrb_SOM::out(double* coord)
 
 double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
 {
+  if (trainingSet.size() == 0)
+    return 0.0;
+
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<> dis(0, trainingSet.size());
+  std::uniform_int_distribution<> dis(0, trainingSet.size() - 1);
   int numNodes = std::pow(res, m_dim);
   int* bmuIndex = new int[m_dim];
   int* tmI = new int[m_dim];
@@ -137,7 +140,7 @@ double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
   {
     // Choose random training vector
     double* training = trainingSet[dis(gen)];
-
+    
     // Find BMU
     double minDist = -1.0; 
     for (int i = 0; i < m_dim; i++)
@@ -155,7 +158,7 @@ double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
 
     for (int i = 0; i < m_dim; i++)
     {
-      bmuDIndex[i] = (double)bmuIndex[i];
+      bmuDIndex[i] = (double)bmuIndex[i] / (double) res;
     }
 
     // Modify neighborhood of BMU
@@ -163,7 +166,7 @@ double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
     {
       inverseMapIndex(i, tmI);
       for (int j = 0; j < m_dim; j++)
-        tempIndex[j] = (double)tmI[j];
+        tempIndex[j] = (double)tmI[j] / (double) res;
 
       double aa = nMetric(bmuDIndex, tempIndex, m_dim, t, numIterations);
       for (int j = 0; j < o_dim; j++)
