@@ -27,11 +27,13 @@ private:
   void inverseMapIndex(int, int*);
 public:
   wrb_SOM();
-  wrb_SOM(int map_dim, int resolution, int out_dim);
+  wrb_SOM(int map_dim, int resolution, int out_dim, double min = 0.0, double max = 1.0);
 
-  void init(int map_dim, int resolution, int out_dim);
+  void init(int map_dim, int resolution, int out_dim, double min = 0.0, double max = 1.0);
 
   double* out(double*);
+  double train(std::vector<double*> trainingSet, int startIt, int goIt, int maxIt);
+  double train(std::vector<double*> trainingSet, int startIt, int maxIt);
   double train(std::vector<double*> trainingSet, int numIterations);
 
   inline wrb_SOM_node* getMap() { return map; };

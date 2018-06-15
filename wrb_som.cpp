@@ -42,17 +42,17 @@ wrb_SOM::wrb_SOM()
   nMetric = &monDecreasingEuler;
 }
 
-wrb_SOM::wrb_SOM(int map_dim, int resolution, int out_dim)
+wrb_SOM::wrb_SOM(int map_dim, int resolution, int out_dim, double min, double max)
 {
   inited = false;
   m_dim = o_dim = res = 0;
   map = nullptr;
   dMetric = &eulerianDist;
   nMetric = &monDecreasingEuler;
-  init(map_dim, resolution, out_dim);
+  init(map_dim, resolution, out_dim, min, max);
 }
 
-void wrb_SOM::init(int map_dim, int resolution, int out_dim)
+void wrb_SOM::init(int map_dim, int resolution, int out_dim, double min, double max)
 {
   if (inited)
   {
@@ -70,7 +70,7 @@ void wrb_SOM::init(int map_dim, int resolution, int out_dim)
   res = resolution;
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dis(0.0, 1.0);
+  std::uniform_real_distribution<> dis(min, max);
   int numNodes = std::pow(res, m_dim);
   map = new wrb_SOM_node[numNodes];
   for (int i = 0; i < numNodes; i++)
@@ -122,7 +122,7 @@ double* wrb_SOM::out(double* coord)
   return map[nI].image;
 }
 
-double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
+double wrb_SOM::train(std::vector<double*> trainingSet, int startIt, int goIt, int maxIt)
 {
   if (trainingSet.size() == 0)
     return 0.0;
@@ -136,7 +136,10 @@ double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
   double* bmuDIndex = new double[m_dim];
   double* tempIndex = new double[m_dim];
 
-  for (int t = 0; t < numIterations; t++)
+  if (startIt + goIt > maxIt)
+    goIt = maxIt - startIt;
+
+  for (int t = startIt; t < startIt + goIt; t++)
   {
     // Choose random training vector
     double* training = trainingSet[dis(gen)];
@@ -168,7 +171,7 @@ double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
       for (int j = 0; j < m_dim; j++)
         tempIndex[j] = (double)tmI[j] / (double) res;
 
-      double aa = nMetric(bmuDIndex, tempIndex, m_dim, t, numIterations);
+      double aa = nMetric(bmuDIndex, tempIndex, m_dim, t, maxIt);
       for (int j = 0; j < o_dim; j++)
       {
         map[i].image[j] = map[i].image[j] * (1.0 - aa) + training[j] * (aa);
@@ -180,6 +183,17 @@ double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
   delete tempIndex;
   delete tmI;
 
-  // Evaluate error of network
+  // TODO: Evaluate error of network
   return 0.0;
+
+}
+
+double wrb_SOM::train(std::vector<double*> trainingSet, int startIt, int maxIt)
+{
+  return train(trainingSet, startIt, maxIt - startIt, maxIt);
+}
+
+double wrb_SOM::train(std::vector<double*> trainingSet, int numIterations)
+{
+  return train(trainingSet, 0, numIterations, numIterations);
 }
