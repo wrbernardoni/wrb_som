@@ -23,8 +23,6 @@ public:
   void init(int map_dim, int resolution, int out_dim);
 
   double* out(double*);
-
-  //TODO Training function
   double train(std::vector<double*> trainingSet, int numIterations);
 
   inline wrb_SOM_node* getMap() { return map; };
