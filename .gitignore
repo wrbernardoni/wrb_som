@@ -1,4 +1,5 @@
 /build/*
 *.ppm
 *.swp
+/out/*
 
