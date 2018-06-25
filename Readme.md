@@ -13,7 +13,7 @@ This creates a 2-dimensional manifold in a 3-dimensional space with a resolution
 Train it by passing in a vector\<double\*\> of your training data, where each double\* is an array of doubles in your output dimension's dimension; also pass in the number of iterations you want it to train for.  
 ***manifold.train(data, iterations);***  
   
-Afterwards you can get the output of the manifold in a given coordinants by passing in coordinants (on the unit cube i.e. all coords between 0 and 1), and it will output the generated map's image at that point. 
+Afterwards you can get the output of the manifold in a given coordinants by passing in coordinants (on the unit cube i.e. all coords between 0 and 1), and it will output the generated map's image at that point.  
 ***double\* m_out = manifold.out(coords);***
 
 
